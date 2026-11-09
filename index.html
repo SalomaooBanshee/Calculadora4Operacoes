@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Calculadora</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            --fundo: #e3f2fd;
+            --calculadora: #ffffff;
+            --visor: #f1f3f5;
+            --texto: #263238;
+            --botao: #e9ecef;
+            --botao-hover: #ced4da;
+
+            background: linear-gradient(to bottom, var(--fundo), #ffffff);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: 0.3s;
+        }
+
+        
+
+        body.escuro {
+            --fundo: #141e30;
+            --calculadora: #222831;
+            --visor: #393e46;
+            --texto: #ffffff;
+            --botao: #393e46;
+            --botao-hover: #505761;
+
+            background: linear-gradient(to bottom, #141e30, #243b55);
+        }
+
+        .calculadora {
+            background-color: var(--calculadora);
+            padding: 25px;
+            border-radius: 15px;
+            width: 320px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transition: 0.3s;
+        }
+
+        h2 {
+            color: var(--texto);
+            text-align: center;
+            margin-top: 0;
+        }
+
+        #visor {
+            width: 100%;
+            height: 60px;
+            background-color: var(--visor);
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 25px;
+            text-align: right;
+            color: var(--texto);
+        }
+
+        .botoes {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 55px;
+            border: none;
+            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: var(--botao);
+            color: var(--texto);
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--botao-hover);
+        }
+
+        .operador {
+            background-color: #bbdefb;
+            color: #1565c0;
+        }
+
+        .operador:hover {
+            background-color: #90caf9;
+        }
+
+        .igual {
+            background-color: #2196f3;
+            color: white;
+            grid-column: span 2;
+        }
+
+        .igual:hover {
+            background-color: #1976d2;
+        }
+
+        .limpar {
+            background-color: #ffcdd2;
+            color: #c62828;
+        }
+
+        .limpar:hover {
+            background-color: #ef9a9a;
+        }
+
+        
+
+        .tema {
+            width: 100%;
+            height: 40px;
+            margin-bottom: 15px;
+            background-color: #607d8b;
+            color: white;
+            font-size: 15px;
+        }
+
+        .tema:hover {
+            background-color: #455a64;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="calculadora">
+
+        <h2>Calculadora</h2>
+
+        <button class="tema" onclick="alternarTema()" id="botaoTema">
+            🌙 Modo Escuro
+        </button>
+
+        <input type="text" id="visor" readonly>
+
+        <div class="botoes">
+
+            <button onclick="adicionar('7')">7</button>
+            <button onclick="adicionar('8')">8</button>
+            <button onclick="adicionar('9')">9</button>
+            <button class="operador" onclick="adicionar('/')">÷</button>
+
+            <button onclick="adicionar('4')">4</button>
+            <button onclick="adicionar('5')">5</button>
+            <button onclick="adicionar('6')">6</button>
+            <button class="operador" onclick="adicionar('*')">×</button>
+
+            <button onclick="adicionar('1')">1</button>
+            <button onclick="adicionar('2')">2</button>
+            <button onclick="adicionar('3')">3</button>
+            <button class="operador" onclick="adicionar('-')">−</button>
+
+            <button onclick="adicionar('0')">0</button>
+            <button onclick="adicionar('.')">.</button>
+            <button class="operador" onclick="adicionar('+')">+</button>
+            <button class="limpar" onclick="limpar()">C</button>
+
+            <button class="igual" onclick="calcular()">=</button>
+
+        </div>
+
+    </div>
+
+    <script>
+
+        
+
+        function alternarTema() {
+
+            document.body.classList.toggle("escuro");
+
+            let botao = document.getElementById("botaoTema");
+
+            if (document.body.classList.contains("escuro")) {
+
+                botao.innerHTML = "☀️ Modo Claro";
+
+            } else {
+
+                botao.innerHTML = "🌙 Modo Escuro";
+
+            }
+
+        }
+
+        
+
+        function adicionar(valor) {
+
+            document.getElementById("visor").value += valor;
+
+        }
+
+       
+
+        function limpar() {
+
+            document.getElementById("visor").value = "";
+
+        }
+
+        
+
+        function calcular() {
+
+            let visor = document.getElementById("visor");
+
+            try {
+
+                let expressao = visor.value;
+
+                if (!/^[0-9+\-*/. ]+$/.test(expressao) || expressao === "") {
+
+                    visor.value = "Erro";
+                    return;
+
+                }
+
+                let resultado = Function(
+                    '"use strict"; return (' + expressao + ')'
+                )();
+
+                if (!Number.isFinite(resultado)) {
+
+                    visor.value = "Erro";
+
+                } else {
+
+                    visor.value = resultado;
+
+                }
+
+            } catch {
+
+                visor.value = "Erro";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>
